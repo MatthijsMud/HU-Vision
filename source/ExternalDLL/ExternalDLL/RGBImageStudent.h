@@ -6,7 +6,11 @@
 
 #pragma once
 #include "RGBImage.h"
-class RGBImageStudent : public RGBImage {
+#include <vector>
+
+class RGBImageStudent final : public RGBImage {
+private:
+	std::vector<RGB> imageData;
 public:
 
 	RGBImageStudent();
