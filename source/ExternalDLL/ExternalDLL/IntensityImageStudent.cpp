@@ -1,75 +1,58 @@
 #include "IntensityImageStudent.h"
 
-IntensityImageStudent::IntensityImageStudent() : IntensityImage() {
-	int throwError = 0, e = 1 / throwError; //Throws error without the need to include a header
-	//TODO: Nothing
+IntensityImageStudent::IntensityImageStudent() 
+	: IntensityImage() 
+	, imageData{0}
+{
 }
 
-IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage(other.getWidth(), other.getHeight()) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Create a copy from the other object
+IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) 
+	: IntensityImage(other.getWidth(), other.getHeight()) 
+	, imageData{other.imageData}
+{
 }
 
-IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Initialize pixel storage
+IntensityImageStudent::IntensityImageStudent(const int width, const int height) 
+	: IntensityImage(width, height) 
+	, imageData{(width * height)}
+{
 }
 
-IntensityImageStudent::~IntensityImageStudent() {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: delete allocated objects
+IntensityImageStudent::~IntensityImageStudent() 
+{
+	// Vector clears its data when it goes out of scope.
 }
 
-void IntensityImageStudent::set(const int width, const int height) {
+void IntensityImageStudent::set(const int width, const int height) 
+{
 	IntensityImage::set(width, height);
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage (Don't forget to delete the old storage)
+	imageData.resize(width * height);
+
+	// TODO: rearrange certain elements so the original image is maintained; possibly cropped.
 }
 
-void IntensityImageStudent::set(const IntensityImageStudent &other) {
+void IntensityImageStudent::set(const IntensityImageStudent &other) 
+{
 	IntensityImage::set(other.getWidth(), other.getHeight());
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage and copy the object (Don't forget to delete the old storage)
+	imageData = other.imageData;
 }
 
-void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
+void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) 
+{
+	setPixel(x + (y * getWidth()), pixel);
 }
 
-void IntensityImageStudent::setPixel(int i, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	/*
-	* TODO: set pixel i in "Row-Major Order"
-	*
-	*
-	* Original 2d image (values):
-	* 9 1 2
-	* 4 3 5
-	* 8 7 8
-	*
-	* 1d representation (i, value):
-	* i		value
-	* 0		9
-	* 1		1
-	* 2		2
-	* 3		4
-	* 4		3
-	* 5		5
-	* 6		8
-	* 7		7
-	* 8		8
-	*/
+void IntensityImageStudent::setPixel(int i, Intensity pixel) 
+{
+	imageData[i] = pixel;
 }
 
-Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
-	return 0;
+Intensity IntensityImageStudent::getPixel(int x, int y) const 
+{
+	return getPixel(x + (y * getWidth()));
 }
 
-Intensity IntensityImageStudent::getPixel(int i) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: see setPixel(int i, RGB pixel)
-	return 0;
+Intensity IntensityImageStudent::getPixel(int i) const 
+{
+	return imageData[i];
 }
