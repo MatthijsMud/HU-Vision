@@ -9,6 +9,9 @@
 #include "HereBeDragons.h"
 #include "ImageFactory.h"
 #include "DLLExecution.h"
+#include "StudentPreProcessing.h"
+#include <memory>
+
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -32,11 +35,13 @@ int main(int argc, char * argv[]) {
 		return 0;
 	}
 
-
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
-
+	executor->studentPreProcessing.setChannel(IntensityChannel::Saturation;
+	std::unique_ptr<IntensityImage> i{ executor->studentPreProcessing.stepToIntensityImage(*input) };
+	
+	ImageIO::saveIntensityImage(*(i.get()), ImageIO::getDebugFileName("Saturation.png"));
 
 	if (executeSteps(executor)) {
 		std::cout << "Face recognition successful!" << std::endl;
