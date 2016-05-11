@@ -44,7 +44,10 @@ void RGBImageStudent::setPixel(int x, int y, RGB pixel)
 
 void RGBImageStudent::setPixel(int i, RGB pixel) 
 {
-	imageData[i] = pixel;
+	if (i >= 0 && i < imageData.size())
+	{
+		imageData[i] = pixel;
+	}
 }
 
 RGB RGBImageStudent::getPixel(int x, int y) const 
@@ -54,5 +57,7 @@ RGB RGBImageStudent::getPixel(int x, int y) const
 
 RGB RGBImageStudent::getPixel(int i) const 
 {
-	return imageData[i];
+	return (i >= 0 && i < imageData.size())
+		? imageData[i]
+		: RGB(0, 0, 0);
 }
