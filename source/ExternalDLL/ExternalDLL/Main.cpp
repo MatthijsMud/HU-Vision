@@ -29,7 +29,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage(ImageIO::getDebugFileName("female-2.png"), *input)) {
+	if (!ImageIO::loadImage(ImageIO::getDebugFileName("face.png"), *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
