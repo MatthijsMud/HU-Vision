@@ -29,7 +29,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage(ImageIO::getDebugFileName("female-3.png"), *input)) {
+	if (!ImageIO::loadImage(ImageIO::getDebugFileName("face.png"), *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -38,10 +38,6 @@ int main(int argc, char * argv[]) {
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
-	executor->studentPreProcessing.setChannel(IntensityChannel::Saturation;
-	std::unique_ptr<IntensityImage> i{ executor->studentPreProcessing.stepToIntensityImage(*input) };
-	
-	ImageIO::saveIntensityImage(*(i.get()), ImageIO::getDebugFileName("Saturation.png"));
 
 	if (executeSteps(executor)) {
 		std::cout << "Face recognition successful!" << std::endl;
@@ -66,6 +62,8 @@ int main(int argc, char * argv[]) {
 
 
 bool executeSteps(DLLExecution * executor) {
+
+	executor->studentPreProcessing.setChannel(IntensityChannel::Saturation);
 
 	//Execute the four Pre-processing steps
 	if (!executor->executePreProcessingStep1(false)) {
@@ -104,12 +102,14 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
+	//
 	if (!executor->executeLocalizationStep2(false)) {
 		std::cout << "Localization step 2 failed!" << std::endl;
 		return false;
 	}
 
-	if (!executor->executeLocalizationStep3(false)) {
+	// Chin contours.
+	if (!executor->executeLocalizationStep3(true)) {
 		std::cout << "Localization step 3 failed!" << std::endl;
 		return false;
 	}
@@ -165,6 +165,12 @@ bool executeSteps(DLLExecution * executor) {
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 	RGB colorRed(244, 67, 54);
+	RGB colorGreen(0,255,0);
+	RGB colorBlue(0,0,255);
+	RGB colorYellow(255, 255, 0);
+	RGB colorCyan(0, 255, 255);
+	RGB colorMagenta(255, 0, 255);
+
 	RGBImage * debug = ImageFactory::newRGBImage(image.getWidth(), image.getHeight());
 	ImageIO::intensityToRGB(image, *debug);
 
@@ -186,7 +192,7 @@ void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 	//Chin
 	std::vector<Point2D<double>> points = features.getFeature(Feature::FEATURE_CHIN_CONTOUR).getPoints();
 	for (size_t i = 0; i < points.size(); i++) {
-		HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, points[i], colorRed);
+		HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, points[i], colorBlue);
 	}
 
 	//Eye
@@ -195,8 +201,8 @@ void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 
 
 	//These (weird) methods can be used to draw debug rects
-	HereBeDragons::AsHisTriumphantPrizeProudOfThisPride(*debug, leftEye[0], leftEye[1], colorRed);
-	HereBeDragons::AsHisTriumphantPrizeProudOfThisPride(*debug, rightEye[0], rightEye[1], colorRed);
+	HereBeDragons::AsHisTriumphantPrizeProudOfThisPride(*debug, leftEye[0], leftEye[1], colorGreen);
+	HereBeDragons::AsHisTriumphantPrizeProudOfThisPride(*debug, rightEye[0], rightEye[1], colorGreen);
 
 
 	//Head
@@ -206,10 +212,10 @@ void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 	Feature headRightNoseMiddle = features.getFeature(Feature::FEATURE_HEAD_RIGHT_NOSE_MIDDLE);
 	Feature headRightNoseBottom = features.getFeature(Feature::FEATURE_HEAD_RIGHT_NOSE_BOTTOM);
 	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headTop[0], colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headLeftNoseMiddle[0], colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headLeftNoseBottom[0], colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headRightNoseMiddle[0], colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headRightNoseBottom[0], colorRed);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headLeftNoseMiddle[0], colorMagenta);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headLeftNoseBottom[0], colorMagenta);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headRightNoseMiddle[0], colorMagenta);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, headRightNoseBottom[0], colorMagenta);
 
 	//Mouth
 	Point2D<double> mouthTop = features.getFeature(Feature::FEATURE_MOUTH_TOP)[0];
@@ -218,12 +224,12 @@ void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 	Point2D<double> mouthRight = features.getFeature(Feature::FEATURE_MOUTH_CORNER_RIGHT)[0];
 
 	//This (weird) method can be used to draw a debug line
-	HereBeDragons::ButRisingAtThyNameDothPointOutThee(*debug, mouthLeft, mouthRight, colorRed);
+	HereBeDragons::ButRisingAtThyNameDothPointOutThee(*debug, mouthLeft, mouthRight, colorYellow);
 
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthTop, colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthBottom, colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthLeft, colorRed);
-	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthRight, colorRed);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthTop, colorYellow);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthBottom, colorYellow);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthLeft, colorYellow);
+	HereBeDragons::TriumphInLoveFleshStaysNoFatherReason(*debug, mouthRight, colorYellow);
 
 	ImageIO::saveRGBImage(*debug, ImageIO::getDebugFileName("feature-points-debug.png"));
 	delete debug;
